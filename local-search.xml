@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Update AOSP repo url</title>
+    <link href="/2024/03/25/2024-03-25-update-aosp-repo-url/"/>
+    <url>/2024/03/25/2024-03-25-update-aosp-repo-url/</url>
+    
+    <content type="html"><![CDATA[<h2 id="一，复制-repo"><a href="#一，复制-repo" class="headerlink" title="一，复制.repo"></a>一，复制.repo</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">mkdir</span> aic11</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cp</span> -ar redroid11/.repo aic11/</span><br></code></pre></td></tr></table></figure><p>如果迁移到其它服务器可以先压缩或者使用rsync复制</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">tar -zcvf redroid11.tar.gz .repo</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">或者</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">rsync -alv <span class="hljs-variable">$&#123;USER&#125;</span>@ip:~/code/.repo .</span><br></code></pre></td></tr></table></figure><h2 id="二，替换url"><a href="#二，替换url" class="headerlink" title="二，替换url"></a>二，替换url</h2><ul><li>如果直接使用repo init会报错<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> aic11</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">repo init --depth 1 -u https://mirrors.bfsu.edu.cn/git/AOSP/platform/manifest -b android-11.0.0_r48</span><br>repo: reusing existing repo client checkout in /mnt/data/code/aic11<br>error: Your local changes to the following files would be overwritten by checkout:<br>        default.xml<br>Please commit your changes or stash them before you switch branches.<br>Aborting<br></code></pre></td></tr></table></figure></li><li>可以先删除.repo/manifest*，再进行repo init<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">rm</span> -rf .repo/manifest*</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">repo init --depth 1 -u https://mirrors.bfsu.edu.cn/git/AOSP/platform/manifest -b android-11.0.0_r48</span><br></code></pre></td></tr></table></figure></li><li>然后用 –force-sync 参数进行同步，这样已经下载的仓库就不会重复下载了。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">repo <span class="hljs-built_in">sync</span> --force-sync</span> <br></code></pre></td></tr></table></figure></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>代码管理</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>git</tag>
+      
+      <tag>教程</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Learning libevent for Android</title>
     <link href="/2024/03/23/2024-03-23-learning-libevent-for-android-create-socket-server-and-client/"/>
     <url>/2024/03/23/2024-03-23-learning-libevent-for-android-create-socket-server-and-client/</url>
