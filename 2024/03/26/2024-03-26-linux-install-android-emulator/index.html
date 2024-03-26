@@ -16,24 +16,25 @@
   <meta name="author" content="">
   <meta name="keywords" content="">
   
-    <meta name="description" content="在已有的repo仓库下替换成其它仓库，如redroid的项目替换成aosp的项目，他们基线可能都一致，但其中个别仓库有差别。">
+    <meta name="description" content="在linux下载并运行Android emulator虚拟机">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Update AOSP repo url">
-<meta property="og:url" content="https://hqw700.github.io/2024/03/25/2024-03-25-update-aosp-repo-url/index.html">
+<meta property="og:title" content="Install Android SDK and run emulator in linux">
+<meta property="og:url" content="https://hqw700.github.io/2024/03/26/2024-03-26-linux-install-android-emulator/index.html">
 <meta property="og:site_name" content="不秃的Android世界">
-<meta property="og:description" content="在已有的repo仓库下替换成其它仓库，如redroid的项目替换成aosp的项目，他们基线可能都一致，但其中个别仓库有差别。">
+<meta property="og:description" content="在linux下载并运行Android emulator虚拟机">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-03-25T12:34:00.000Z">
-<meta property="article:modified_time" content="2024-03-25T12:36:06.225Z">
-<meta property="article:tag" content="git">
+<meta property="article:published_time" content="2024-03-26T15:05:00.000Z">
+<meta property="article:modified_time" content="2024-03-26T15:18:15.623Z">
 <meta property="article:tag" content="教程">
+<meta property="article:tag" content="虚拟化">
+<meta property="article:tag" content="环境搭建">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Update AOSP repo url - 不秃的Android世界</title>
+  <title>Install Android SDK and run emulator in linux - 不秃的Android世界</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Update AOSP repo url"></span>
+            <span id="subtitle" data-typed-text="Install Android SDK and run emulator in linux"></span>
           
         </div>
 
@@ -209,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-03-25 20:34" pubdate>
-          2024年3月25日 晚上
+        <time datetime="2024-03-26 23:05" pubdate>
+          2024年3月26日 晚上
         </time>
       </span>
     
@@ -254,18 +255,27 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Update AOSP repo url</h1>
+            <h1 style="display: none">Install Android SDK and run emulator in linux</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="一，复制-repo"><a href="#一，复制-repo" class="headerlink" title="一，复制.repo"></a>一，复制.repo</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">mkdir</span> aic11</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cp</span> -ar redroid11/.repo aic11/</span><br></code></pre></td></tr></table></figure>
-<p>如果迁移到其它服务器可以先压缩或者使用rsync复制</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">tar -zcvf redroid11.tar.gz .repo</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">或者</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">rsync -alv <span class="hljs-variable">$&#123;USER&#125;</span>@ip:~/code/.repo .</span><br></code></pre></td></tr></table></figure>
-<h2 id="二，替换url"><a href="#二，替换url" class="headerlink" title="二，替换url"></a>二，替换url</h2><ul>
-<li>如果直接使用repo init会报错<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> aic11</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">repo init --depth 1 -u https://mirrors.bfsu.edu.cn/git/AOSP/platform/manifest -b android-11.0.0_r48</span><br>repo: reusing existing repo client checkout in /mnt/data/code/aic11<br>error: Your local changes to the following files would be overwritten by checkout:<br>        default.xml<br>Please commit your changes or stash them before you switch branches.<br>Aborting<br></code></pre></td></tr></table></figure></li>
-<li>可以先删除.repo/manifest*，再进行repo init<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">rm</span> -rf .repo/manifest*</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">repo init --depth 1 -u https://mirrors.bfsu.edu.cn/git/AOSP/platform/manifest -b android-11.0.0_r48</span><br></code></pre></td></tr></table></figure></li>
-<li>然后用 –force-sync 参数进行同步，这样已经下载的仓库就不会重复下载了。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">repo <span class="hljs-built_in">sync</span> --force-sync</span> <br></code></pre></td></tr></table></figure></li>
+                <h2 id="Install-related-dependencies"><a href="#Install-related-dependencies" class="headerlink" title="Install related dependencies"></a>Install related dependencies</h2><ul>
+<li><p>centos<br>sudo yum install java-11-openjdk</p>
+</li>
+<li><p>ubuntu<br>sudo apt install openjdk-11-jdk</p>
+</li>
+</ul>
+<h2 id="Download-Android-SDK"><a href="#Download-Android-SDK" class="headerlink" title="Download Android SDK"></a>Download Android SDK</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-built_in">mkdir</span> -p ~/sdk/cmdline-tools<br><span class="hljs-built_in">cd</span> ~/sdk/cmdline-tools<br>wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip<br>unzip commandlinetools-linux-8512546_latest.zip<br><span class="hljs-built_in">mv</span> cmdline-tools/ latest<br><span class="hljs-built_in">cd</span> ..<br><span class="hljs-built_in">echo</span> y | ./cmdline-tools/latest/bin/sdkmanager emulator <br><span class="hljs-built_in">echo</span> y | ./cmdline-tools/latest/bin/sdkmanager <span class="hljs-string">&quot;platform-tools&quot;</span> <span class="hljs-string">&quot;platforms;android-28&quot;</span><br><span class="hljs-built_in">echo</span> y | ./cmdline-tools/latest/bin/sdkmanager <span class="hljs-string">&quot;system-images;android-28;default;x86_64&quot;</span><br></code></pre></td></tr></table></figure>
+<h2 id="Source-env"><a href="#Source-env" class="headerlink" title="Source env"></a>Source env</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-built_in">export</span> <span class="hljs-attribute">ANDROID_SDK_ROOT</span>=/home/test/sdk<br><span class="hljs-built_in">export</span> <span class="hljs-attribute">PATH</span>=<span class="hljs-variable">$ANDROID_SDK_ROOT</span>/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH<br></code></pre></td></tr></table></figure>
+<h2 id="Create-and-run-emulator-avd"><a href="#Create-and-run-emulator-avd" class="headerlink" title="Create and run emulator avd"></a>Create and run emulator avd</h2><ul>
+<li>Create avd<br><code>avdmanager create avd -n test -k &quot;system-images;android-28;default;x86_64&quot; -d &quot;Galaxy Nexus&quot;</code></li>
+<li>Run avd<br><code>./emulator/emulator -avd test -shell-serial stdio -allow-host-audio -skip-adb-auth -no-snapshot -no-window -cores 4 -writable-system -partition-size 8192 -gpu host -qemu -cpu host  -enable-kvm -m 4096</code></li>
+</ul>
+<h2 id="Run-adb"><a href="#Run-adb" class="headerlink" title="Run adb"></a>Run adb</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">adb devices</span><br>List of devices attached<br>emualtor-5554        device<br></code></pre></td></tr></table></figure>
+<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><ul>
+<li>ERROR<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs shell">INFO    | Android emulator version 31.3.13.0 (build_id 9189900) (CL:N/A)<br>emulator: INFO: Found systemPath /home/test/sdk/./system-images/android-28/default/x86_64/<br>INFO    | Duplicate loglines will be removed, if you wish to see each indiviudal line launch with the -log-nofilter flag.<br>WARNING | System image is writable<br>ProbeKVM: This user doesn&#x27;t have permissions to use KVM (/dev/kvm).<br>The KVM line in /etc/group is: [LINE_NOT_FOUND]<br><br>If the current user has KVM permissions,<br>the KVM line in /etc/group should end with &quot;:&quot; followed by your username.<br><br>If we see LINE_NOT_FOUND, the kvm group may need to be created along with permissions:<br>    sudo groupadd -r kvm<br>    # Then ensure /lib/udev/rules.d/50-udev-default.rules contains something like:<br>    # KERNEL==&quot;kvm&quot;, GROUP=&quot;kvm&quot;, MODE=&quot;0660&quot;<br>    # and then run:<br>    sudo gpasswd -a $USER kvm<br><br>If we see kvm:... but no username at the end, running the following command may allow KVM access:<br>    sudo gpasswd -a $USER kvm<br><br>You may need to log out and back in for changes to take effect.<br><br>ERROR   | x86_64 emulation currently requires hardware acceleration!<br>CPU acceleration status: This user doesn&#x27;t have permissions to use KVM (/dev/kvm).<br>The KVM line in /etc/group is: [LINE_NOT_FOUND]<br><br>If the current user has KVM permissions,<br>the KVM line in /etc/group should end with &quot;:&quot; followed by your username.<br><br>If we see LINE_NOT_FOUND, the kv<br>More info on configuring VM acceleration on Linux:<br>https://developer.android.com/studio/run/emulator-acceleration#vm-linux<br>General information on acceleration: https://developer.android.com/studio/run/emulator-acceleration.<br></code></pre></td></tr></table></figure>
+<h3 id="Fixed"><a href="#Fixed" class="headerlink" title="Fixed"></a>Fixed</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">Permissions on /dev/kvm is currently (incorrect group and permissions):<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">ls</span> -l /dev/kvm</span><br>crw------- 1 root root 10, 232 Jul  5 13:27 /dev/kvm<br>This should ideally be:<br>crw-rw---- 1 root kvm 10, 232 Jul  5 13:27 /dev/kvm<br><br>Manually changing it helps boot up the emulator. However, the settings are reverted on restart.<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo <span class="hljs-built_in">chgrp</span> kvm /dev/kvm</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo <span class="hljs-built_in">chmod</span> g+rw /dev/kvm</span><br></code></pre></td></tr></table></figure></li>
 </ul>
 
                 
@@ -285,7 +295,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86/" class="category-chain-item">代码管理</a>
+  <a href="/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/" class="category-chain-item">虚拟化</a>
   
   
 
@@ -300,9 +310,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/git/">#git</a>
-      
         <a href="/tags/%E6%95%99%E7%A8%8B/">#教程</a>
+      
+        <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
+      
+        <a href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">#环境搭建</a>
       
     </div>
   
@@ -314,15 +326,15 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Update AOSP repo url</div>
-      <div>https://hqw700.github.io/2024/03/25/2024-03-25-update-aosp-repo-url/</div>
+      <div>Install Android SDK and run emulator in linux</div>
+      <div>https://hqw700.github.io/2024/03/26/2024-03-26-linux-install-android-emulator/</div>
     </div>
     <div class="license-meta">
       
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年3月25日</div>
+          <div>2024年3月26日</div>
         </div>
       
       
@@ -354,18 +366,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/03/26/2024-03-26-linux-install-android-emulator/" title="Install Android SDK and run emulator in linux">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Install Android SDK and run emulator in linux</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/03/23/2024-03-23-learning-libevent-for-android-create-socket-server-and-client/" title="Learning libevent for Android">
-                        <span class="hidden-mobile">Learning libevent for Android</span>
+                      <a href="/2024/03/25/2024-03-25-update-aosp-repo-url/" title="Update AOSP repo url">
+                        <span class="hidden-mobile">Update AOSP repo url</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
