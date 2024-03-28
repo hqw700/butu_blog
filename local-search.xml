@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>Build Android emulator source code</title>
+    <link href="/2024/03/28/2024-03-28-build-android-emulator-source-code/"/>
+    <url>/2024/03/28/2024-03-28-build-android-emulator-source-code/</url>
+    
+    <content type="html"><![CDATA[<h2 id="Source-code-download"><a href="#Source-code-download" class="headerlink" title="Source code download"></a>Source code download</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo curl https://mirrors.bfsu.edu.cn/git/git-repo -o /usr/local/bin/repo</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo <span class="hljs-built_in">chmod</span> +x /usr/local/bin/repo</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">export</span> REPO_URL=<span class="hljs-string">&#x27;https://mirrors.bfsu.edu.cn/git/git-repo&#x27;</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">sudo <span class="hljs-built_in">ln</span> /usr/bin/python3 /usr/bin/python</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">repo init --depth 1 https://mirrors.bfsu.edu.cn/git/AOSP/platform/manifest -b emu-30-release</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">repo <span class="hljs-built_in">sync</span> -c --no-tags</span><br></code></pre></td></tr></table></figure><h2 id="Build"><a href="#Build" class="headerlink" title="Build"></a>Build</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">./android/rebuild.sh  --no-tests --config debug</span><br>...<br>Debug build enabled.<br>ASAN may be in use; recommend disabling some ASAN checks as build is not<br>universally ASANified. This can be done with<br>. android/envsetup.sh<br><br>or export ASAN_OPTIONS=detect_leaks=0:detect_container_overflow=0:detect_odr_violation=0:symbolize=1<br></code></pre></td></tr></table></figure><h2 id="Run"><a href="#Run" class="headerlink" title="Run"></a>Run</h2><p>Run as previous post: <a href="https://hqw700.github.io/2024/03/26/2024-03-26-linux-install-android-emulator/">Install Android SDK and run emulator in linux</a></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">export</span> ASAN_OPTIONS=detect_leaks=0:detect_container_overflow=0:detect_odr_violation=0:symbolize=1</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">export</span> ANDROID_SDK_ROOT=/home/test/sdk</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">export</span> PATH=<span class="hljs-variable">$ANDROID_SDK_ROOT</span>/cmdline-tools/latest/bin:<span class="hljs-variable">$ANDROID_SDK_ROOT</span>/platform-tools:<span class="hljs-variable">$PATH</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">objs/distribution/emulator/emulator -avd <span class="hljs-built_in">test</span> -shell-serial stdio -allow-host-audio -skip-adb-auth -no-snapshot -no-window -cores 4 -writable-system -partition-size 8192 -gpu host -qemu -cpu host -enable-kvm -m 4096</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>虚拟化</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>教程</tag>
+      
+      <tag>虚拟化</tag>
+      
+      <tag>Android系统</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>A heap profiler tool - valgrind massif</title>
     <link href="/2024/03/27/2024-03-27-va/"/>
     <url>/2024/03/27/2024-03-27-va/</url>
