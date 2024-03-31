@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Shutdown secure boot when use custom kernel in libvrit</title>
+    <link href="/2024/03/31/2024-03-31-shutdown-secure-boot-when-use-custom-kernel-in-libvrit/"/>
+    <url>/2024/03/31/2024-03-31-shutdown-secure-boot-when-use-custom-kernel-in-libvrit/</url>
+    
+    <content type="html"><![CDATA[<h2 id="一，安装命令"><a href="#一，安装命令" class="headerlink" title="一，安装命令"></a>一，安装命令</h2><p>以安装ubuntu20.04为例</p><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs stylus">$ qemu-<span class="hljs-selector-tag">img</span> create -f qcow2 ubuntu<span class="hljs-selector-class">.qcow2</span> <span class="hljs-number">64</span>G<br>$ virt-install \<br><span class="hljs-attr">--boot</span> uefi \<br><span class="hljs-attr">--name</span> ubuntu \<br><span class="hljs-attr">--vcpus</span> <span class="hljs-number">4</span> \<br><span class="hljs-attr">--cpu</span> host-passthrough \<br><span class="hljs-attr">--ram</span> <span class="hljs-number">4096</span> \<br><span class="hljs-attr">--memballoon</span> <span class="hljs-attribute">none</span> \<br><span class="hljs-attr">--clock</span> offset=<span class="hljs-string">&#x27;localtime&#x27;</span> \<br><span class="hljs-attr">--network</span> network=default \<br><span class="hljs-attr">--graphics</span> vnc,listen=<span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>,port=<span class="hljs-number">5901</span> \<br><span class="hljs-attr">--video</span>=qxl \<br><span class="hljs-attr">--disk</span> ./ubuntu<span class="hljs-selector-class">.qcow2</span> \<br><span class="hljs-attr">--cdrom</span>=./ubuntu20.<span class="hljs-number">04</span><span class="hljs-selector-class">.iso</span> \<br><span class="hljs-attr">--boot</span> cdrom,hd \<br><span class="hljs-attr">--input</span> tablet<br></code></pre></td></tr></table></figure><h2 id="二，安装自定义内核"><a href="#二，安装自定义内核" class="headerlink" title="二，安装自定义内核"></a>二，安装自定义内核</h2><p>出现以下错误<br>Loading Linux 5.10.54 …<br>error: bad shim signature<br><img src="/img/blog/atsm-boot-error.png"></p><h3 id="2-1-该问题是由于此时secureboot状态为enabled"><a href="#2-1-该问题是由于此时secureboot状态为enabled" class="headerlink" title="2.1 该问题是由于此时secureboot状态为enabled"></a>2.1 该问题是由于此时secureboot状态为enabled</h3><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ada">$ mokutil <span class="hljs-comment">--sb-state</span><br>SecureBoot enabled<br></code></pre></td></tr></table></figure><h2 id="三，关闭secure-boot"><a href="#三，关闭secure-boot" class="headerlink" title="三，关闭secure boot"></a>三，关闭secure boot</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs xml">$ virsh edit ubuntu<br><span class="hljs-tag">&lt;<span class="hljs-name">os</span> <span class="hljs-attr">firmware</span>=<span class="hljs-string">&#x27;efi&#x27;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">loader</span> <span class="hljs-attr">secure</span>=<span class="hljs-string">&#x27;yes&#x27;</span>/&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">firmware</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">feature</span> <span class="hljs-attr">enabled</span>=<span class="hljs-string">&#x27;yes&#x27;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&#x27;secure-boot&#x27;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">feature</span> <span class="hljs-attr">enabled</span>=<span class="hljs-string">&#x27;no&#x27;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&#x27;enrolled-keys&#x27;</span>/&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">firmware</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">os</span>&gt;</span><br></code></pre></td></tr></table></figure><h3 id="3-1-重新创建并启动虚机"><a href="#3-1-重新创建并启动虚机" class="headerlink" title="3.1 重新创建并启动虚机"></a>3.1 重新创建并启动虚机</h3><p>如果libvirt版本高于8.1.0, 直接使用<code>virsh start $vm --reset-nvram</code>即可。<br>8.1.0版本以下采用以下命令</p><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">$ virsh dumpxml ubuntu &gt; ubuntu-with-nosecure.<span class="hljs-keyword">xml</span><br><span class="hljs-title">$</span> virsh undefine --nvram ubuntu<br>$ virsh define ubuntu-with-nosecure.<span class="hljs-keyword">xml</span><br><span class="hljs-title">$</span> virsh <span class="hljs-literal">start</span> ubuntu<br></code></pre></td></tr></table></figure><p>虚机启动后查看此时SecureBoot状态，为disabled即可进行自定义内核安装</p><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ada">$ mokutil <span class="hljs-comment">--sb-state</span><br>SecureBoot disabled<br>Platform <span class="hljs-keyword">is</span> <span class="hljs-keyword">in</span> Setup Mode<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>虚拟化</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>教程</tag>
+      
+      <tag>虚拟化</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Build android executable so lib with ndk</title>
     <link href="/2024/03/30/2024-03-30-ndk-build-android-executable-so/"/>
     <url>/2024/03/30/2024-03-30-ndk-build-android-executable-so/</url>
