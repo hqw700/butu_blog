@@ -16,26 +16,28 @@
   <meta name="author" content="">
   <meta name="keywords" content="">
   
-    <meta name="description" content="使用virt-install安装虚拟机并关闭secure boot, 以支持自定义kernel。">
+    <meta name="description" content="使用gdb调试ndk编译的可执行文件，但失败了，使用clion的gdb远程调试正常。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Shutdown secure boot when use custom kernel in libvrit">
-<meta property="og:url" content="https://hqw700.github.io/2024/03/31/2024-03-31-shutdown-secure-boot-when-use-custom-kernel-in-libvrit/index.html">
+<meta property="og:title" content="Use gdb debug ndk executable file">
+<meta property="og:url" content="https://hqw700.github.io/2024/04/01/2024-04-01-use-gdb-debug-ndk-executable/index.html">
 <meta property="og:site_name" content="不秃的Android世界">
-<meta property="og:description" content="使用virt-install安装虚拟机并关闭secure boot, 以支持自定义kernel。">
+<meta property="og:description" content="使用gdb调试ndk编译的可执行文件，但失败了，使用clion的gdb远程调试正常。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://hqw700.github.io/img/blog/atsm-boot-error.png">
-<meta property="article:published_time" content="2024-03-31T15:36:00.000Z">
-<meta property="article:modified_time" content="2024-04-01T15:22:58.873Z">
+<meta property="og:image" content="https://hqw700.github.io/img/blog/ndk-gdb-1.png">
+<meta property="og:image" content="https://hqw700.github.io/img/blog/ndk-gdb-2.png">
+<meta property="article:published_time" content="2024-04-01T15:22:00.000Z">
+<meta property="article:modified_time" content="2024-04-01T15:23:09.873Z">
 <meta property="article:tag" content="教程">
-<meta property="article:tag" content="虚拟化">
+<meta property="article:tag" content="Android系统">
+<meta property="article:tag" content="ndk">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://hqw700.github.io/img/blog/atsm-boot-error.png">
+<meta name="twitter:image" content="https://hqw700.github.io/img/blog/ndk-gdb-1.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Shutdown secure boot when use custom kernel in libvrit - 不秃的Android世界</title>
+  <title>Use gdb debug ndk executable file - 不秃的Android世界</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Shutdown secure boot when use custom kernel in libvrit"></span>
+            <span id="subtitle" data-typed-text="Use gdb debug ndk executable file"></span>
           
         </div>
 
@@ -211,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-03-31 23:36" pubdate>
-          2024年3月31日 晚上
+        <time datetime="2024-04-01 23:22" pubdate>
+          2024年4月1日 晚上
         </time>
       </span>
     
@@ -256,21 +258,19 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Shutdown secure boot when use custom kernel in libvrit</h1>
+            <h1 style="display: none">Use gdb debug ndk executable file</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="一，安装命令"><a href="#一，安装命令" class="headerlink" title="一，安装命令"></a>一，安装命令</h2><p>以安装ubuntu20.04为例</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs stylus">$ qemu-<span class="hljs-selector-tag">img</span> create -f qcow2 ubuntu<span class="hljs-selector-class">.qcow2</span> <span class="hljs-number">64</span>G<br>$ virt-install \<br><span class="hljs-attr">--boot</span> uefi \<br><span class="hljs-attr">--name</span> ubuntu \<br><span class="hljs-attr">--vcpus</span> <span class="hljs-number">4</span> \<br><span class="hljs-attr">--cpu</span> host-passthrough \<br><span class="hljs-attr">--ram</span> <span class="hljs-number">4096</span> \<br><span class="hljs-attr">--memballoon</span> <span class="hljs-attribute">none</span> \<br><span class="hljs-attr">--clock</span> offset=<span class="hljs-string">&#x27;localtime&#x27;</span> \<br><span class="hljs-attr">--network</span> network=default \<br><span class="hljs-attr">--graphics</span> vnc,listen=<span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>,port=<span class="hljs-number">5901</span> \<br><span class="hljs-attr">--video</span>=qxl \<br><span class="hljs-attr">--disk</span> ./ubuntu<span class="hljs-selector-class">.qcow2</span> \<br><span class="hljs-attr">--cdrom</span>=./ubuntu20.<span class="hljs-number">04</span><span class="hljs-selector-class">.iso</span> \<br><span class="hljs-attr">--boot</span> cdrom,hd \<br><span class="hljs-attr">--input</span> tablet<br></code></pre></td></tr></table></figure>
+                <p>Code in previous post: <a href="https://hqw700.github.io/2024/03/26/2024-03-26-linux-install-android-emulator/">Install android ndk in linux and compile the sample code</a></p>
+<h2 id="Run-in-adb"><a href="#Run-in-adb" class="headerlink" title="Run in adb"></a>Run in adb</h2><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">$ adb forward tcp:<span class="hljs-number">12345</span> tcp:<span class="hljs-number">12345</span><br>$ adb root<br>$ adb <span class="hljs-built_in">shell</span> gdbserver64 :<span class="hljs-number">12345</span> /data/<span class="hljs-built_in">local</span>/tmp/hello_cmake<br>Process /data/<span class="hljs-built_in">local</span>/tmp/hello_cmake created; pid = <span class="hljs-number">6923</span><br>gdbserver: Unable <span class="hljs-built_in">to</span> determine <span class="hljs-keyword">the</span> <span class="hljs-built_in">number</span> <span class="hljs-keyword">of</span> hardware watchpoints available.<br>gdbserver: Unable <span class="hljs-built_in">to</span> determine <span class="hljs-keyword">the</span> <span class="hljs-built_in">number</span> <span class="hljs-keyword">of</span> hardware breakpoints available.<br>Listening <span class="hljs-keyword">on</span> <span class="hljs-title">port</span> <span class="hljs-title">12345</span><br></code></pre></td></tr></table></figure>
+<h2 id="Use-gdb-in-comand-line-is-ERROR"><a href="#Use-gdb-in-comand-line-is-ERROR" class="headerlink" title="Use gdb in comand-line is ERROR"></a>Use gdb in comand-line is ERROR</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ cat &lt;&lt; EOF &gt; gdb.config<br>set sysroot <span class="hljs-regexp">/home/</span>huangqw<span class="hljs-regexp">/github/</span>hello-ndk<br>b <span class="hljs-regexp">/home/</span>huangqw<span class="hljs-regexp">/github/</span>hello-ndk/main.cpp:<span class="hljs-number">7</span><br>target remote <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">12345</span><br>EOF<br></code></pre></td></tr></table></figure>
+<p>Run gdb show error: <strong>Backtrace stopped: not enough registers or memory available to unwind further</strong><br>Can not continue</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs stata">$ gdb-multiarch -x gdb.config<br>GNU gdb (Ubuntu 8.1.1-0ubuntu1) 8.1.1<br><span class="hljs-keyword">Copyright</span> (C) 2018 Free Software Foundation, Inc.<br>License GPLv3+: GNU GPL <span class="hljs-keyword">version</span> 3 or later &lt;http:<span class="hljs-comment">//gnu.org/licenses/gpl.html&gt;</span><br>This is free software: you are free to change and redistribute it.<br>There is <span class="hljs-keyword">NO</span> WARRANTY, to the extent permitted <span class="hljs-keyword">by</span> law.  <span class="hljs-keyword">Type</span> <span class="hljs-string">&quot;show copying&quot;</span><br>and <span class="hljs-string">&quot;show warranty&quot;</span> <span class="hljs-keyword">for</span> details.<br>This GDB was configured <span class="hljs-keyword">as</span> <span class="hljs-string">&quot;x86_64-linux-gnu&quot;</span>.<br><span class="hljs-keyword">Type</span> <span class="hljs-string">&quot;show configuration&quot;</span> <span class="hljs-keyword">for</span> configuration details.<br><span class="hljs-keyword">For</span> bug reporting instructions, please see:<br>&lt;http:<span class="hljs-comment">//www.gnu.org/software/gdb/bugs/&gt;.</span><br>Find the GDB manual and other documentation resources online at:<br>&lt;http:<span class="hljs-comment">//www.gnu.org/software/gdb/documentation/&gt;.</span><br><span class="hljs-keyword">For</span> <span class="hljs-keyword">help</span>, <span class="hljs-keyword">type</span> <span class="hljs-string">&quot;help&quot;</span>.<br><span class="hljs-keyword">Type</span> <span class="hljs-string">&quot;apropos word&quot;</span> to <span class="hljs-keyword">search</span> <span class="hljs-keyword">for</span> commands related to <span class="hljs-string">&quot;word&quot;</span>.<br><span class="hljs-keyword">No</span> symbol <span class="hljs-keyword">table</span> is loaded.  <span class="hljs-keyword">Use</span> the <span class="hljs-string">&quot;file&quot;</span> command.<br>Make breakpoint pending <span class="hljs-keyword">on</span> future shared library load? (y or [<span class="hljs-keyword">n</span>]) [answered <span class="hljs-keyword">N</span>; <span class="hljs-keyword">input</span> not from terminal]<br><span class="hljs-keyword">No</span> executable <span class="hljs-keyword">file</span> now.<br>warning: Could not load vsyscall page because <span class="hljs-keyword">no</span> executable was specified<br>0x0000007fb7f3b270 <span class="hljs-keyword">in</span> ?? ()<br>(gdb) bt<br>#0  0x0000007fb7f3b270 <span class="hljs-keyword">in</span> ?? ()<br>Backtrace stopped: not enough registers or <span class="hljs-keyword">memory</span> available to unwind further<br>(gdb) c<br>Continuing.<br><br></code></pre></td></tr></table></figure>
+<h2 id="Same-operation-debug-in-clion-is-OK"><a href="#Same-operation-debug-in-clion-is-OK" class="headerlink" title="Same operation debug in clion is OK"></a>Same operation debug in clion is OK</h2><h3 id="clion-config"><a href="#clion-config" class="headerlink" title="clion config"></a>clion config</h3><p><img src="/img/blog/ndk-gdb-1.png" srcset="/img/loading.gif" lazyload alt="clion gdb config"></p>
+<h3 id="clion-run-remote-debug"><a href="#clion-run-remote-debug" class="headerlink" title="clion run remote debug"></a>clion run remote debug</h3><p><img src="/img/blog/ndk-gdb-2.png" srcset="/img/loading.gif" lazyload alt="clion run remote debug"></p>
 
-<h2 id="二，安装自定义内核"><a href="#二，安装自定义内核" class="headerlink" title="二，安装自定义内核"></a>二，安装自定义内核</h2><p>出现以下错误<br>Loading Linux 5.10.54 …<br>error: bad shim signature<br><img src="/img/blog/atsm-boot-error.png" srcset="/img/loading.gif" lazyload></p>
-<h3 id="2-1-该问题是由于此时secureboot状态为enabled"><a href="#2-1-该问题是由于此时secureboot状态为enabled" class="headerlink" title="2.1 该问题是由于此时secureboot状态为enabled"></a>2.1 该问题是由于此时secureboot状态为enabled</h3><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ada">$ mokutil <span class="hljs-comment">--sb-state</span><br>SecureBoot enabled<br></code></pre></td></tr></table></figure>
-<h2 id="三，关闭secure-boot"><a href="#三，关闭secure-boot" class="headerlink" title="三，关闭secure boot"></a>三，关闭secure boot</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs xml">$ virsh edit ubuntu<br><span class="hljs-tag">&lt;<span class="hljs-name">os</span> <span class="hljs-attr">firmware</span>=<span class="hljs-string">&#x27;efi&#x27;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">loader</span> <span class="hljs-attr">secure</span>=<span class="hljs-string">&#x27;yes&#x27;</span>/&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">firmware</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">feature</span> <span class="hljs-attr">enabled</span>=<span class="hljs-string">&#x27;yes&#x27;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&#x27;secure-boot&#x27;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">feature</span> <span class="hljs-attr">enabled</span>=<span class="hljs-string">&#x27;no&#x27;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&#x27;enrolled-keys&#x27;</span>/&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">firmware</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">os</span>&gt;</span><br></code></pre></td></tr></table></figure>
-<h3 id="3-1-重新创建并启动虚机"><a href="#3-1-重新创建并启动虚机" class="headerlink" title="3.1 重新创建并启动虚机"></a>3.1 重新创建并启动虚机</h3><p>如果libvirt版本高于8.1.0, 直接使用<code>virsh start $vm --reset-nvram</code>即可。<br>8.1.0版本以下采用以下命令</p>
-<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">$ virsh dumpxml ubuntu &gt; ubuntu-with-nosecure.<span class="hljs-keyword">xml</span><br><span class="hljs-title">$</span> virsh undefine --nvram ubuntu<br>$ virsh define ubuntu-with-nosecure.<span class="hljs-keyword">xml</span><br><span class="hljs-title">$</span> virsh <span class="hljs-literal">start</span> ubuntu<br></code></pre></td></tr></table></figure>
-<p>虚机启动后查看此时SecureBoot状态，为disabled即可进行自定义内核安装</p>
-<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ada">$ mokutil <span class="hljs-comment">--sb-state</span><br>SecureBoot disabled<br>Platform <span class="hljs-keyword">is</span> <span class="hljs-keyword">in</span> Setup Mode<br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -288,7 +288,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/" class="category-chain-item">虚拟化</a>
+  <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" class="category-chain-item">工具使用</a>
   
   
 
@@ -305,7 +305,9 @@
       
         <a href="/tags/%E6%95%99%E7%A8%8B/">#教程</a>
       
-        <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
+        <a href="/tags/Android%E7%B3%BB%E7%BB%9F/">#Android系统</a>
+      
+        <a href="/tags/ndk/">#ndk</a>
       
     </div>
   
@@ -317,15 +319,15 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Shutdown secure boot when use custom kernel in libvrit</div>
-      <div>https://hqw700.github.io/2024/03/31/2024-03-31-shutdown-secure-boot-when-use-custom-kernel-in-libvrit/</div>
+      <div>Use gdb debug ndk executable file</div>
+      <div>https://hqw700.github.io/2024/04/01/2024-04-01-use-gdb-debug-ndk-executable/</div>
     </div>
     <div class="license-meta">
       
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年3月31日</div>
+          <div>2024年4月1日</div>
         </div>
       
       
@@ -357,18 +359,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/04/01/2024-04-01-use-gdb-debug-ndk-executable/" title="Use gdb debug ndk executable file">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Use gdb debug ndk executable file</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/03/30/2024-03-30-ndk-build-android-executable-so/" title="Build android executable so lib with ndk">
-                        <span class="hidden-mobile">Build android executable so lib with ndk</span>
+                      <a href="/2024/03/31/2024-03-31-shutdown-secure-boot-when-use-custom-kernel-in-libvrit/" title="Shutdown secure boot when use custom kernel in libvrit">
+                        <span class="hidden-mobile">Shutdown secure boot when use custom kernel in libvrit</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

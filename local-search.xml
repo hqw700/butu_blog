@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>Use gdb debug ndk executable file</title>
+    <link href="/2024/04/01/2024-04-01-use-gdb-debug-ndk-executable/"/>
+    <url>/2024/04/01/2024-04-01-use-gdb-debug-ndk-executable/</url>
+    
+    <content type="html"><![CDATA[<p>Code in previous post: <a href="https://hqw700.github.io/2024/03/26/2024-03-26-linux-install-android-emulator/">Install android ndk in linux and compile the sample code</a></p><h2 id="Run-in-adb"><a href="#Run-in-adb" class="headerlink" title="Run in adb"></a>Run in adb</h2><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">$ adb forward tcp:<span class="hljs-number">12345</span> tcp:<span class="hljs-number">12345</span><br>$ adb root<br>$ adb <span class="hljs-built_in">shell</span> gdbserver64 :<span class="hljs-number">12345</span> /data/<span class="hljs-built_in">local</span>/tmp/hello_cmake<br>Process /data/<span class="hljs-built_in">local</span>/tmp/hello_cmake created; pid = <span class="hljs-number">6923</span><br>gdbserver: Unable <span class="hljs-built_in">to</span> determine <span class="hljs-keyword">the</span> <span class="hljs-built_in">number</span> <span class="hljs-keyword">of</span> hardware watchpoints available.<br>gdbserver: Unable <span class="hljs-built_in">to</span> determine <span class="hljs-keyword">the</span> <span class="hljs-built_in">number</span> <span class="hljs-keyword">of</span> hardware breakpoints available.<br>Listening <span class="hljs-keyword">on</span> <span class="hljs-title">port</span> <span class="hljs-title">12345</span><br></code></pre></td></tr></table></figure><h2 id="Use-gdb-in-comand-line-is-ERROR"><a href="#Use-gdb-in-comand-line-is-ERROR" class="headerlink" title="Use gdb in comand-line is ERROR"></a>Use gdb in comand-line is ERROR</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ cat &lt;&lt; EOF &gt; gdb.config<br>set sysroot <span class="hljs-regexp">/home/</span>huangqw<span class="hljs-regexp">/github/</span>hello-ndk<br>b <span class="hljs-regexp">/home/</span>huangqw<span class="hljs-regexp">/github/</span>hello-ndk/main.cpp:<span class="hljs-number">7</span><br>target remote <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">12345</span><br>EOF<br></code></pre></td></tr></table></figure><p>Run gdb show error: <strong>Backtrace stopped: not enough registers or memory available to unwind further</strong><br>Can not continue</p><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs stata">$ gdb-multiarch -x gdb.config<br>GNU gdb (Ubuntu 8.1.1-0ubuntu1) 8.1.1<br><span class="hljs-keyword">Copyright</span> (C) 2018 Free Software Foundation, Inc.<br>License GPLv3+: GNU GPL <span class="hljs-keyword">version</span> 3 or later &lt;http:<span class="hljs-comment">//gnu.org/licenses/gpl.html&gt;</span><br>This is free software: you are free to change and redistribute it.<br>There is <span class="hljs-keyword">NO</span> WARRANTY, to the extent permitted <span class="hljs-keyword">by</span> law.  <span class="hljs-keyword">Type</span> <span class="hljs-string">&quot;show copying&quot;</span><br>and <span class="hljs-string">&quot;show warranty&quot;</span> <span class="hljs-keyword">for</span> details.<br>This GDB was configured <span class="hljs-keyword">as</span> <span class="hljs-string">&quot;x86_64-linux-gnu&quot;</span>.<br><span class="hljs-keyword">Type</span> <span class="hljs-string">&quot;show configuration&quot;</span> <span class="hljs-keyword">for</span> configuration details.<br><span class="hljs-keyword">For</span> bug reporting instructions, please see:<br>&lt;http:<span class="hljs-comment">//www.gnu.org/software/gdb/bugs/&gt;.</span><br>Find the GDB manual and other documentation resources online at:<br>&lt;http:<span class="hljs-comment">//www.gnu.org/software/gdb/documentation/&gt;.</span><br><span class="hljs-keyword">For</span> <span class="hljs-keyword">help</span>, <span class="hljs-keyword">type</span> <span class="hljs-string">&quot;help&quot;</span>.<br><span class="hljs-keyword">Type</span> <span class="hljs-string">&quot;apropos word&quot;</span> to <span class="hljs-keyword">search</span> <span class="hljs-keyword">for</span> commands related to <span class="hljs-string">&quot;word&quot;</span>.<br><span class="hljs-keyword">No</span> symbol <span class="hljs-keyword">table</span> is loaded.  <span class="hljs-keyword">Use</span> the <span class="hljs-string">&quot;file&quot;</span> command.<br>Make breakpoint pending <span class="hljs-keyword">on</span> future shared library load? (y or [<span class="hljs-keyword">n</span>]) [answered <span class="hljs-keyword">N</span>; <span class="hljs-keyword">input</span> not from terminal]<br><span class="hljs-keyword">No</span> executable <span class="hljs-keyword">file</span> now.<br>warning: Could not load vsyscall page because <span class="hljs-keyword">no</span> executable was specified<br>0x0000007fb7f3b270 <span class="hljs-keyword">in</span> ?? ()<br>(gdb) bt<br>#0  0x0000007fb7f3b270 <span class="hljs-keyword">in</span> ?? ()<br>Backtrace stopped: not enough registers or <span class="hljs-keyword">memory</span> available to unwind further<br>(gdb) c<br>Continuing.<br><br></code></pre></td></tr></table></figure><h2 id="Same-operation-debug-in-clion-is-OK"><a href="#Same-operation-debug-in-clion-is-OK" class="headerlink" title="Same operation debug in clion is OK"></a>Same operation debug in clion is OK</h2><h3 id="clion-config"><a href="#clion-config" class="headerlink" title="clion config"></a>clion config</h3><p><img src="/img/blog/ndk-gdb-1.png" alt="clion gdb config"></p><h3 id="clion-run-remote-debug"><a href="#clion-run-remote-debug" class="headerlink" title="clion run remote debug"></a>clion run remote debug</h3><p><img src="/img/blog/ndk-gdb-2.png" alt="clion run remote debug"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>工具使用</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>教程</tag>
+      
+      <tag>Android系统</tag>
+      
+      <tag>ndk</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Shutdown secure boot when use custom kernel in libvrit</title>
     <link href="/2024/03/31/2024-03-31-shutdown-secure-boot-when-use-custom-kernel-in-libvrit/"/>
     <url>/2024/03/31/2024-03-31-shutdown-secure-boot-when-use-custom-kernel-in-libvrit/</url>
@@ -51,6 +80,8 @@
       
       <tag>Android系统</tag>
       
+      <tag>ndk</tag>
+      
     </tags>
     
   </entry>
@@ -77,6 +108,8 @@
       <tag>教程</tag>
       
       <tag>Android系统</tag>
+      
+      <tag>ndk</tag>
       
     </tags>
     
