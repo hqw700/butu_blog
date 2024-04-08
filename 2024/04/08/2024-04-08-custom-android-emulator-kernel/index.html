@@ -16,28 +16,25 @@
   <meta name="author" content="">
   <meta name="keywords" content="">
   
-    <meta name="description" content="使用gdb调试ndk编译的可执行文件，但失败了，使用clion的gdb远程调试正常。">
+    <meta name="description" content="下载源码并编译Android emulator的内核，以x86 Android 9的4.4内核为例。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Use gdb debug ndk executable file">
-<meta property="og:url" content="https://hqw700.github.io/2024/04/01/2024-04-01-use-gdb-debug-ndk-executable/index.html">
+<meta property="og:title" content="Custom Android Emulator kernel">
+<meta property="og:url" content="https://hqw700.github.io/2024/04/08/2024-04-08-custom-android-emulator-kernel/index.html">
 <meta property="og:site_name" content="不秃的Android世界">
-<meta property="og:description" content="使用gdb调试ndk编译的可执行文件，但失败了，使用clion的gdb远程调试正常。">
+<meta property="og:description" content="下载源码并编译Android emulator的内核，以x86 Android 9的4.4内核为例。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://hqw700.github.io/img/blog/ndk-gdb-1.png">
-<meta property="og:image" content="https://hqw700.github.io/img/blog/ndk-gdb-2.png">
-<meta property="article:published_time" content="2024-04-01T15:22:00.000Z">
-<meta property="article:modified_time" content="2024-04-01T15:23:09.873Z">
+<meta property="article:published_time" content="2024-04-08T14:53:00.000Z">
+<meta property="article:modified_time" content="2024-04-08T15:03:47.182Z">
 <meta property="article:tag" content="教程">
+<meta property="article:tag" content="虚拟化">
 <meta property="article:tag" content="Android系统">
-<meta property="article:tag" content="ndk">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://hqw700.github.io/img/blog/ndk-gdb-1.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Use gdb debug ndk executable file - 不秃的Android世界</title>
+  <title>Custom Android Emulator kernel - 不秃的Android世界</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Use gdb debug ndk executable file"></span>
+            <span id="subtitle" data-typed-text="Custom Android Emulator kernel"></span>
           
         </div>
 
@@ -213,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-04-01 23:22" pubdate>
-          2024年4月1日 晚上
+        <time datetime="2024-04-08 22:53" pubdate>
+          2024年4月8日 晚上
         </time>
       </span>
     
@@ -258,19 +255,19 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Use gdb debug ndk executable file</h1>
+            <h1 style="display: none">Custom Android Emulator kernel</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Code in previous post: <a href="https://hqw700.github.io/2024/03/26/2024-03-26-linux-install-android-emulator/">Install android ndk in linux and compile the sample code</a></p>
-<h2 id="Run-in-adb"><a href="#Run-in-adb" class="headerlink" title="Run in adb"></a>Run in adb</h2><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">$ adb forward tcp:<span class="hljs-number">12345</span> tcp:<span class="hljs-number">12345</span><br>$ adb root<br>$ adb <span class="hljs-built_in">shell</span> gdbserver64 :<span class="hljs-number">12345</span> /data/<span class="hljs-built_in">local</span>/tmp/hello_cmake<br>Process /data/<span class="hljs-built_in">local</span>/tmp/hello_cmake created; pid = <span class="hljs-number">6923</span><br>gdbserver: Unable <span class="hljs-built_in">to</span> determine <span class="hljs-keyword">the</span> <span class="hljs-built_in">number</span> <span class="hljs-keyword">of</span> hardware watchpoints available.<br>gdbserver: Unable <span class="hljs-built_in">to</span> determine <span class="hljs-keyword">the</span> <span class="hljs-built_in">number</span> <span class="hljs-keyword">of</span> hardware breakpoints available.<br>Listening <span class="hljs-keyword">on</span> <span class="hljs-title">port</span> <span class="hljs-title">12345</span><br></code></pre></td></tr></table></figure>
-<h2 id="Use-gdb-in-comand-line-is-ERROR"><a href="#Use-gdb-in-comand-line-is-ERROR" class="headerlink" title="Use gdb in comand-line is ERROR"></a>Use gdb in comand-line is ERROR</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ cat &lt;&lt; EOF &gt; gdb.config<br>set sysroot <span class="hljs-regexp">/home/</span>huangqw<span class="hljs-regexp">/github/</span>hello-ndk<br>b <span class="hljs-regexp">/home/</span>huangqw<span class="hljs-regexp">/github/</span>hello-ndk/main.cpp:<span class="hljs-number">7</span><br>target remote <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">12345</span><br>EOF<br></code></pre></td></tr></table></figure>
-<p>Run gdb show error: <strong>Backtrace stopped: not enough registers or memory available to unwind further</strong><br>Can not continue</p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs stata">$ gdb-multiarch -x gdb.config<br>GNU gdb (Ubuntu 8.1.1-0ubuntu1) 8.1.1<br><span class="hljs-keyword">Copyright</span> (C) 2018 Free Software Foundation, Inc.<br>License GPLv3+: GNU GPL <span class="hljs-keyword">version</span> 3 or later &lt;http:<span class="hljs-comment">//gnu.org/licenses/gpl.html&gt;</span><br>This is free software: you are free to change and redistribute it.<br>There is <span class="hljs-keyword">NO</span> WARRANTY, to the extent permitted <span class="hljs-keyword">by</span> law.  <span class="hljs-keyword">Type</span> <span class="hljs-string">&quot;show copying&quot;</span><br>and <span class="hljs-string">&quot;show warranty&quot;</span> <span class="hljs-keyword">for</span> details.<br>This GDB was configured <span class="hljs-keyword">as</span> <span class="hljs-string">&quot;x86_64-linux-gnu&quot;</span>.<br><span class="hljs-keyword">Type</span> <span class="hljs-string">&quot;show configuration&quot;</span> <span class="hljs-keyword">for</span> configuration details.<br><span class="hljs-keyword">For</span> bug reporting instructions, please see:<br>&lt;http:<span class="hljs-comment">//www.gnu.org/software/gdb/bugs/&gt;.</span><br>Find the GDB manual and other documentation resources online at:<br>&lt;http:<span class="hljs-comment">//www.gnu.org/software/gdb/documentation/&gt;.</span><br><span class="hljs-keyword">For</span> <span class="hljs-keyword">help</span>, <span class="hljs-keyword">type</span> <span class="hljs-string">&quot;help&quot;</span>.<br><span class="hljs-keyword">Type</span> <span class="hljs-string">&quot;apropos word&quot;</span> to <span class="hljs-keyword">search</span> <span class="hljs-keyword">for</span> commands related to <span class="hljs-string">&quot;word&quot;</span>.<br><span class="hljs-keyword">No</span> symbol <span class="hljs-keyword">table</span> is loaded.  <span class="hljs-keyword">Use</span> the <span class="hljs-string">&quot;file&quot;</span> command.<br>Make breakpoint pending <span class="hljs-keyword">on</span> future shared library load? (y or [<span class="hljs-keyword">n</span>]) [answered <span class="hljs-keyword">N</span>; <span class="hljs-keyword">input</span> not from terminal]<br><span class="hljs-keyword">No</span> executable <span class="hljs-keyword">file</span> now.<br>warning: Could not load vsyscall page because <span class="hljs-keyword">no</span> executable was specified<br>0x0000007fb7f3b270 <span class="hljs-keyword">in</span> ?? ()<br>(gdb) bt<br>#0  0x0000007fb7f3b270 <span class="hljs-keyword">in</span> ?? ()<br>Backtrace stopped: not enough registers or <span class="hljs-keyword">memory</span> available to unwind further<br>(gdb) c<br>Continuing.<br><br></code></pre></td></tr></table></figure>
-<h2 id="Same-operation-debug-in-clion-is-OK"><a href="#Same-operation-debug-in-clion-is-OK" class="headerlink" title="Same operation debug in clion is OK"></a>Same operation debug in clion is OK</h2><h3 id="clion-config"><a href="#clion-config" class="headerlink" title="clion config"></a>clion config</h3><p><img src="/img/blog/ndk-gdb-1.png" srcset="/img/loading.gif" lazyload alt="clion gdb config"></p>
-<h3 id="clion-run-remote-debug"><a href="#clion-run-remote-debug" class="headerlink" title="clion run remote debug"></a>clion run remote debug</h3><p><img src="/img/blog/ndk-gdb-2.png" srcset="/img/loading.gif" lazyload alt="clion run remote debug"></p>
-
+                <p>Take Android9 x86-64 kernel compilation as an example</p>
+<h2 id="Download-Source-code"><a href="#Download-Source-code" class="headerlink" title="Download Source code"></a>Download Source code</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ repo init --depth <span class="hljs-number">1</span> -u https:<span class="hljs-regexp">//mi</span>rrors.bfsu.edu.cn<span class="hljs-regexp">/git/</span>AOSP<span class="hljs-regexp">/kernel/m</span>anifest \<br>  -b p-goldfish-android-goldfish-<span class="hljs-number">4.4</span>-dev<br>$ repo sync -c --no-tags<br></code></pre></td></tr></table></figure>
+<h2 id="Custom-config"><a href="#Custom-config" class="headerlink" title="Custom config"></a>Custom config</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">$ <span class="hljs-attribute">BUILD_CONFIG</span>=goldfish/build.config.goldfish.x86_64 <span class="hljs-attribute">LTO</span>=thin build/config.sh<br></code></pre></td></tr></table></figure>
+<p>After executing config.sh, the <strong>goldfish/arch/x86/configs/x86_64_ranchu_defconfig</strong> file will be modified.</p>
+<h2 id="Build"><a href="#Build" class="headerlink" title="Build"></a>Build</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">$ <span class="hljs-attribute">BUILD_CONFIG</span>=goldfish/build.config.goldfish.x86_64 <span class="hljs-attribute">LTO</span>=thin build/build.sh -j20<br></code></pre></td></tr></table></figure>
+<p>gen the kernel file: <strong>./out/x86_64/dist/bzImage</strong></p>
+<h2 id="Run"><a href="#Run" class="headerlink" title="Run"></a>Run</h2><p>Run as previous post: <a href="https://hqw700.github.io/2024/03/26/2024-03-26-linux-install-android-emulator/">Install Android SDK and run emulator in linux</a>  </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ emulator ... -qemu -kernel .<span class="hljs-regexp">/out/</span>x86_64<span class="hljs-regexp">/dist/</span>bzImage ...<br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -288,7 +285,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" class="category-chain-item">工具使用</a>
+  <a href="/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/" class="category-chain-item">虚拟化</a>
   
   
 
@@ -305,9 +302,9 @@
       
         <a href="/tags/%E6%95%99%E7%A8%8B/">#教程</a>
       
-        <a href="/tags/Android%E7%B3%BB%E7%BB%9F/">#Android系统</a>
+        <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
       
-        <a href="/tags/ndk/">#ndk</a>
+        <a href="/tags/Android%E7%B3%BB%E7%BB%9F/">#Android系统</a>
       
     </div>
   
@@ -319,15 +316,15 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Use gdb debug ndk executable file</div>
-      <div>https://hqw700.github.io/2024/04/01/2024-04-01-use-gdb-debug-ndk-executable/</div>
+      <div>Custom Android Emulator kernel</div>
+      <div>https://hqw700.github.io/2024/04/08/2024-04-08-custom-android-emulator-kernel/</div>
     </div>
     <div class="license-meta">
       
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年4月1日</div>
+          <div>2024年4月8日</div>
         </div>
       
       
@@ -359,18 +356,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/04/08/2024-04-08-custom-android-emulator-kernel/" title="Custom Android Emulator kernel">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Custom Android Emulator kernel</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/03/31/2024-03-31-shutdown-secure-boot-when-use-custom-kernel-in-libvrit/" title="Shutdown secure boot when use custom kernel in libvrit">
-                        <span class="hidden-mobile">Shutdown secure boot when use custom kernel in libvrit</span>
+                      <a href="/2024/04/01/2024-04-01-use-gdb-debug-ndk-executable/" title="Use gdb debug ndk executable file">
+                        <span class="hidden-mobile">Use gdb debug ndk executable file</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

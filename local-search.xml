@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>Custom Android Emulator kernel</title>
+    <link href="/2024/04/08/2024-04-08-custom-android-emulator-kernel/"/>
+    <url>/2024/04/08/2024-04-08-custom-android-emulator-kernel/</url>
+    
+    <content type="html"><![CDATA[<p>Take Android9 x86-64 kernel compilation as an example</p><h2 id="Download-Source-code"><a href="#Download-Source-code" class="headerlink" title="Download Source code"></a>Download Source code</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ repo init --depth <span class="hljs-number">1</span> -u https:<span class="hljs-regexp">//mi</span>rrors.bfsu.edu.cn<span class="hljs-regexp">/git/</span>AOSP<span class="hljs-regexp">/kernel/m</span>anifest \<br>  -b p-goldfish-android-goldfish-<span class="hljs-number">4.4</span>-dev<br>$ repo sync -c --no-tags<br></code></pre></td></tr></table></figure><h2 id="Custom-config"><a href="#Custom-config" class="headerlink" title="Custom config"></a>Custom config</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">$ <span class="hljs-attribute">BUILD_CONFIG</span>=goldfish/build.config.goldfish.x86_64 <span class="hljs-attribute">LTO</span>=thin build/config.sh<br></code></pre></td></tr></table></figure><p>After executing config.sh, the <strong>goldfish/arch/x86/configs/x86_64_ranchu_defconfig</strong> file will be modified.</p><h2 id="Build"><a href="#Build" class="headerlink" title="Build"></a>Build</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">$ <span class="hljs-attribute">BUILD_CONFIG</span>=goldfish/build.config.goldfish.x86_64 <span class="hljs-attribute">LTO</span>=thin build/build.sh -j20<br></code></pre></td></tr></table></figure><p>gen the kernel file: <strong>./out/x86_64/dist/bzImage</strong></p><h2 id="Run"><a href="#Run" class="headerlink" title="Run"></a>Run</h2><p>Run as previous post: <a href="https://hqw700.github.io/2024/03/26/2024-03-26-linux-install-android-emulator/">Install Android SDK and run emulator in linux</a>  </p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ emulator ... -qemu -kernel .<span class="hljs-regexp">/out/</span>x86_64<span class="hljs-regexp">/dist/</span>bzImage ...<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>虚拟化</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>教程</tag>
+      
+      <tag>虚拟化</tag>
+      
+      <tag>Android系统</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Use gdb debug ndk executable file</title>
     <link href="/2024/04/01/2024-04-01-use-gdb-debug-ndk-executable/"/>
     <url>/2024/04/01/2024-04-01-use-gdb-debug-ndk-executable/</url>
