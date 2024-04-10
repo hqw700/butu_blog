@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>PVE setup in n100</title>
+    <link href="/2024/04/10/2024-04-10-pve-setup-in-n100/"/>
+    <url>/2024/04/10/2024-04-10-pve-setup-in-n100/</url>
+    
+    <content type="html"><![CDATA[<h2 id="ISO镜像下载"><a href="#ISO镜像下载" class="headerlink" title="ISO镜像下载"></a>ISO镜像下载</h2><p>1.2GB<br><a href="https://enterprise.proxmox.com/iso/proxmox-ve_8.1-2.iso">https://enterprise.proxmox.com/iso/proxmox-ve_8.1-2.iso</a><br>或者使用国内源<br><a href="https://mirrors.bfsu.edu.cn/proxmox/iso/proxmox-ve_8.1-2.iso">https://mirrors.bfsu.edu.cn/proxmox/iso/proxmox-ve_8.1-2.iso</a></p><h2 id="制作启动盘"><a href="#制作启动盘" class="headerlink" title="制作启动盘"></a>制作启动盘</h2><p><img src="/img/blog//rufus-pve-iso.png"></p><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>把u盘插进主机中启动安装<br><img src="/img/blog//pve-install-1.png"><br><img src="/img/blog//pve-install-2.png"><br><img src="/img/blog//pve-install-3.png"></p><h3 id="拔掉U盘然后等待自动重启"><a href="#拔掉U盘然后等待自动重启" class="headerlink" title="拔掉U盘然后等待自动重启"></a>拔掉U盘然后等待自动重启</h3><p><img src="/img/blog//pve-install-4.png"></p><h2 id="在另外一台PC通过网址进入"><a href="#在另外一台PC通过网址进入" class="headerlink" title="在另外一台PC通过网址进入"></a>在另外一台PC通过网址进入</h2><p><img src="/img/blog//pve-install-5.png"></p><h2 id="更新国内源地址"><a href="#更新国内源地址" class="headerlink" title="更新国内源地址"></a>更新国内源地址</h2><p>参照北外源文档：<a href="https://mirrors.tuna.tsinghua.edu.cn/help/proxmox/">https://mirrors.tuna.tsinghua.edu.cn/help/proxmox/</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>虚拟化</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>教程</tag>
+      
+      <tag>虚拟化</tag>
+      
+      <tag>PVE</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Custom Android Emulator kernel</title>
     <link href="/2024/04/08/2024-04-08-custom-android-emulator-kernel/"/>
     <url>/2024/04/08/2024-04-08-custom-android-emulator-kernel/</url>

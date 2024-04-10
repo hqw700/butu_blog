@@ -16,25 +16,32 @@
   <meta name="author" content="">
   <meta name="keywords" content="">
   
-    <meta name="description" content="下载源码并编译Android emulator的内核，以x86 Android 9的4.4内核为例。">
+    <meta name="description" content="在intel n100小主机安装PVE">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Custom Android Emulator kernel">
-<meta property="og:url" content="https://hqw700.github.io/2024/04/08/2024-04-08-custom-android-emulator-kernel/index.html">
+<meta property="og:title" content="PVE setup in n100">
+<meta property="og:url" content="https://hqw700.github.io/2024/04/10/2024-04-10-pve-setup-in-n100/index.html">
 <meta property="og:site_name" content="不秃的Android世界">
-<meta property="og:description" content="下载源码并编译Android emulator的内核，以x86 Android 9的4.4内核为例。">
+<meta property="og:description" content="在intel n100小主机安装PVE">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-04-08T14:53:00.000Z">
-<meta property="article:modified_time" content="2024-04-08T15:03:47.182Z">
+<meta property="og:image" content="https://hqw700.github.io/img/blog//rufus-pve-iso.png">
+<meta property="og:image" content="https://hqw700.github.io/img/blog//pve-install-1.png">
+<meta property="og:image" content="https://hqw700.github.io/img/blog//pve-install-2.png">
+<meta property="og:image" content="https://hqw700.github.io/img/blog//pve-install-3.png">
+<meta property="og:image" content="https://hqw700.github.io/img/blog//pve-install-4.png">
+<meta property="og:image" content="https://hqw700.github.io/img/blog//pve-install-5.png">
+<meta property="article:published_time" content="2024-04-10T14:53:00.000Z">
+<meta property="article:modified_time" content="2024-04-10T14:09:42.581Z">
 <meta property="article:tag" content="教程">
 <meta property="article:tag" content="虚拟化">
-<meta property="article:tag" content="Android系统">
+<meta property="article:tag" content="PVE">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hqw700.github.io/img/blog//rufus-pve-iso.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Custom Android Emulator kernel - 不秃的Android世界</title>
+  <title>PVE setup in n100 - 不秃的Android世界</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +206,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Custom Android Emulator kernel"></span>
+            <span id="subtitle" data-typed-text="PVE setup in n100"></span>
           
         </div>
 
@@ -210,8 +217,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-04-08 22:53" pubdate>
-          2024年4月8日 晚上
+        <time datetime="2024-04-10 22:53" pubdate>
+          2024年4月10日 晚上
         </time>
       </span>
     
@@ -255,19 +262,18 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Custom Android Emulator kernel</h1>
+            <h1 style="display: none">PVE setup in n100</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Take Android9 x86-64 kernel compilation as an example</p>
-<h2 id="Download-Source-code"><a href="#Download-Source-code" class="headerlink" title="Download Source code"></a>Download Source code</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ repo init --depth <span class="hljs-number">1</span> -u https:<span class="hljs-regexp">//mi</span>rrors.bfsu.edu.cn<span class="hljs-regexp">/git/</span>AOSP<span class="hljs-regexp">/kernel/m</span>anifest \<br>  -b p-goldfish-android-goldfish-<span class="hljs-number">4.4</span>-dev<br>$ repo sync -c --no-tags<br></code></pre></td></tr></table></figure>
-<h2 id="Custom-config"><a href="#Custom-config" class="headerlink" title="Custom config"></a>Custom config</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">$ <span class="hljs-attribute">BUILD_CONFIG</span>=goldfish/build.config.goldfish.x86_64 <span class="hljs-attribute">LTO</span>=thin build/config.sh<br></code></pre></td></tr></table></figure>
-<p>After executing config.sh, the <strong>goldfish/arch/x86/configs/x86_64_ranchu_defconfig</strong> file will be modified.</p>
-<h2 id="Build"><a href="#Build" class="headerlink" title="Build"></a>Build</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">$ <span class="hljs-attribute">BUILD_CONFIG</span>=goldfish/build.config.goldfish.x86_64 <span class="hljs-attribute">LTO</span>=thin build/build.sh -j20<br></code></pre></td></tr></table></figure>
-<p>gen the kernel file: <strong>./out/x86_64/dist/bzImage</strong></p>
-<h2 id="Run"><a href="#Run" class="headerlink" title="Run"></a>Run</h2><p>Run as previous post: <a href="https://hqw700.github.io/2024/03/26/2024-03-26-linux-install-android-emulator/">Install Android SDK and run emulator in linux</a>  </p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">$ emulator ... -qemu -kernel .<span class="hljs-regexp">/out/</span>x86_64<span class="hljs-regexp">/dist/</span>bzImage ...<br></code></pre></td></tr></table></figure>
+                <h2 id="ISO镜像下载"><a href="#ISO镜像下载" class="headerlink" title="ISO镜像下载"></a>ISO镜像下载</h2><p>1.2GB<br><a target="_blank" rel="noopener" href="https://enterprise.proxmox.com/iso/proxmox-ve_8.1-2.iso">https://enterprise.proxmox.com/iso/proxmox-ve_8.1-2.iso</a><br>或者使用国内源<br><a target="_blank" rel="noopener" href="https://mirrors.bfsu.edu.cn/proxmox/iso/proxmox-ve_8.1-2.iso">https://mirrors.bfsu.edu.cn/proxmox/iso/proxmox-ve_8.1-2.iso</a></p>
+<h2 id="制作启动盘"><a href="#制作启动盘" class="headerlink" title="制作启动盘"></a>制作启动盘</h2><p><img src="/img/blog//rufus-pve-iso.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>把u盘插进主机中启动安装<br><img src="/img/blog//pve-install-1.png" srcset="/img/loading.gif" lazyload><br><img src="/img/blog//pve-install-2.png" srcset="/img/loading.gif" lazyload><br><img src="/img/blog//pve-install-3.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="拔掉U盘然后等待自动重启"><a href="#拔掉U盘然后等待自动重启" class="headerlink" title="拔掉U盘然后等待自动重启"></a>拔掉U盘然后等待自动重启</h3><p><img src="/img/blog//pve-install-4.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="在另外一台PC通过网址进入"><a href="#在另外一台PC通过网址进入" class="headerlink" title="在另外一台PC通过网址进入"></a>在另外一台PC通过网址进入</h2><p><img src="/img/blog//pve-install-5.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="更新国内源地址"><a href="#更新国内源地址" class="headerlink" title="更新国内源地址"></a>更新国内源地址</h2><p>参照北外源文档：<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/proxmox/">https://mirrors.tuna.tsinghua.edu.cn/help/proxmox/</a></p>
+
                 
               </div>
             
@@ -304,7 +310,7 @@
       
         <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
       
-        <a href="/tags/Android%E7%B3%BB%E7%BB%9F/">#Android系统</a>
+        <a href="/tags/PVE/">#PVE</a>
       
     </div>
   
@@ -316,15 +322,15 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Custom Android Emulator kernel</div>
-      <div>https://hqw700.github.io/2024/04/08/2024-04-08-custom-android-emulator-kernel/</div>
+      <div>PVE setup in n100</div>
+      <div>https://hqw700.github.io/2024/04/10/2024-04-10-pve-setup-in-n100/</div>
     </div>
     <div class="license-meta">
       
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年4月8日</div>
+          <div>2024年4月10日</div>
         </div>
       
       
@@ -356,18 +362,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/04/10/2024-04-10-pve-setup-in-n100/" title="PVE setup in n100">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">PVE setup in n100</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/04/01/2024-04-01-use-gdb-debug-ndk-executable/" title="Use gdb debug ndk executable file">
-                        <span class="hidden-mobile">Use gdb debug ndk executable file</span>
+                      <a href="/2024/04/08/2024-04-08-custom-android-emulator-kernel/" title="Custom Android Emulator kernel">
+                        <span class="hidden-mobile">Custom Android Emulator kernel</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
