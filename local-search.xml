@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>PVE setup igpu sriov mode in N100</title>
+    <link href="/2024/04/11/2024-04-11-pve-setup-igpu-sriov-mode-in-n100/"/>
+    <url>/2024/04/11/2024-04-11-pve-setup-igpu-sriov-mode-in-n100/</url>
+    
+    <content type="html"><![CDATA[<p>previous post: <a href="https://hqw700.github.io/2024/04/10/2024-04-10-pve-setup-in-n100/">PVE setup in n100</a></p><h2 id="grub-配置"><a href="#grub-配置" class="headerlink" title="grub 配置"></a>grub 配置</h2><p>edit /etc/default/grub</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">GRUB_CMDLINE_LINUX_DEFAULT</span>=<span class="hljs-string">&quot;quiet intel_iommu=on i915.enable_guc=3 i915.max_vfs=7&quot;</span><br></code></pre></td></tr></table></figure><p>After edit</p><figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">update</span>-grub<br><span class="hljs-keyword">update</span>-initramfs -u<br>reboot<br></code></pre></td></tr></table></figure><h2 id="modules-配置"><a href="#modules-配置" class="headerlink" title="modules 配置"></a>modules 配置</h2><p>edit /etc/modules</p><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">vfio<br>vfio<span class="hljs-emphasis">_iommu_type1</span><br><span class="hljs-emphasis">vfio_pci</span><br><span class="hljs-emphasis">vfio_</span>virqfd<br></code></pre></td></tr></table></figure><h2 id="安装linux-headers"><a href="#安装linux-headers" class="headerlink" title="安装linux headers"></a>安装linux headers</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">wget</span> http://mirrors.ustc.edu.cn/proxmox/debian/dists/bookworm/pve-no-subscription/binary-amd64/proxmox-headers-<span class="hljs-number">6</span>.<span class="hljs-number">5</span>.<span class="hljs-number">11</span>-<span class="hljs-number">8</span>-pve_6.<span class="hljs-number">5</span>.<span class="hljs-number">11</span>-<span class="hljs-number">8</span>_amd64.deb<br><span class="hljs-attribute">dpkg</span> -i proxmox-headers-<span class="hljs-number">6</span>.<span class="hljs-number">5</span>.<span class="hljs-number">11</span>-<span class="hljs-number">8</span>-pve_6.<span class="hljs-number">5</span>.<span class="hljs-number">11</span>-<span class="hljs-number">8</span>_amd64.deb<br></code></pre></td></tr></table></figure><h2 id="安装依赖包"><a href="#安装依赖包" class="headerlink" title="安装依赖包"></a>安装依赖包</h2><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">apt <span class="hljs-keyword">install </span>-y  <span class="hljs-keyword">build-* </span>git unzip dkms<br></code></pre></td></tr></table></figure><h2 id="下载并编译sriov驱动"><a href="#下载并编译sriov驱动" class="headerlink" title="下载并编译sriov驱动"></a>下载并编译sriov驱动</h2><h3 id="代码下载"><a href="#代码下载" class="headerlink" title="代码下载"></a>代码下载</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">cd <span class="hljs-regexp">/usr/</span>src<br>git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/strongtz/i</span>915-sriov-dkms i915-sriov-dkms-<span class="hljs-number">6.5</span><br></code></pre></td></tr></table></figure><h2 id="代码修改"><a href="#代码修改" class="headerlink" title="代码修改"></a>代码修改</h2><p>edit /usr/src/i915-sriov-dkms-6.1/dkms.conf with the following:</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">PACKAGE_NAME</span>=<span class="hljs-string">&quot;i915-sriov-dkms&quot;</span><br><span class="hljs-attr">PACKAGE_VERSION</span>=<span class="hljs-string">&quot;6.5&quot;</span><br></code></pre></td></tr></table></figure><h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">dkms</span> install --force -m i915-sriov-dkms -v <span class="hljs-number">6</span>.<span class="hljs-number">5</span><br><span class="hljs-attribute">reboot</span><br></code></pre></td></tr></table></figure><p><img src="/img/blog/pve-sriov-1.png"></p><h2 id="重启后查看dmesg"><a href="#重启后查看dmesg" class="headerlink" title="重启后查看dmesg"></a>重启后查看dmesg</h2><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c">dmesg <span class="hljs-string">| grep -ie guc -ie hc -ie sriov</span><br></code></pre></td></tr></table></figure><p>显示 <strong>Running in SR-IOV PF mode</strong>，说明驱动加载成功<br><img src="/img/blog/pve-sriov-2.png"></p><h2 id="设置核显切分"><a href="#设置核显切分" class="headerlink" title="设置核显切分"></a>设置核显切分</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">echo</span> <span class="hljs-number">7</span> &gt; /sys/devices/pci0000:<span class="hljs-number">00</span>/<span class="hljs-number">0000</span>:<span class="hljs-number">00</span>:<span class="hljs-number">02</span>.<span class="hljs-number">0</span>/sriov_numvfs<br></code></pre></td></tr></table></figure><p><code>lspci | grep -i vga</code> 显示有8个显卡，说明切分成功<br><img src="/img/blog/pve-sriov-3.png"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>虚拟化</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>教程</tag>
+      
+      <tag>虚拟化</tag>
+      
+      <tag>PVE</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>PVE setup in n100</title>
     <link href="/2024/04/10/2024-04-10-pve-setup-in-n100/"/>
     <url>/2024/04/10/2024-04-10-pve-setup-in-n100/</url>

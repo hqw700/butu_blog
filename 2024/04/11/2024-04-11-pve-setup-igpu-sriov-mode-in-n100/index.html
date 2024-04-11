@@ -16,32 +16,29 @@
   <meta name="author" content="">
   <meta name="keywords" content="">
   
-    <meta name="description" content="在intel n100小主机安装PVE">
+    <meta name="description" content="在Intel n100的PVE下设置SRIOV核显切分">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PVE setup in n100">
-<meta property="og:url" content="https://hqw700.github.io/2024/04/10/2024-04-10-pve-setup-in-n100/index.html">
+<meta property="og:title" content="PVE setup igpu sriov mode in N100">
+<meta property="og:url" content="https://hqw700.github.io/2024/04/11/2024-04-11-pve-setup-igpu-sriov-mode-in-n100/index.html">
 <meta property="og:site_name" content="不秃的Android世界">
-<meta property="og:description" content="在intel n100小主机安装PVE">
+<meta property="og:description" content="在Intel n100的PVE下设置SRIOV核显切分">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://hqw700.github.io/img/blog//rufus-pve-iso.png">
-<meta property="og:image" content="https://hqw700.github.io/img/blog//pve-install-1.png">
-<meta property="og:image" content="https://hqw700.github.io/img/blog//pve-install-2.png">
-<meta property="og:image" content="https://hqw700.github.io/img/blog//pve-install-3.png">
-<meta property="og:image" content="https://hqw700.github.io/img/blog//pve-install-4.png">
-<meta property="og:image" content="https://hqw700.github.io/img/blog//pve-install-5.png">
-<meta property="article:published_time" content="2024-04-10T14:53:00.000Z">
-<meta property="article:modified_time" content="2024-04-10T14:09:42.581Z">
+<meta property="og:image" content="https://hqw700.github.io/img/blog/pve-sriov-1.png">
+<meta property="og:image" content="https://hqw700.github.io/img/blog/pve-sriov-2.png">
+<meta property="og:image" content="https://hqw700.github.io/img/blog/pve-sriov-3.png">
+<meta property="article:published_time" content="2024-04-11T14:53:00.000Z">
+<meta property="article:modified_time" content="2024-04-11T14:52:33.966Z">
 <meta property="article:tag" content="教程">
 <meta property="article:tag" content="虚拟化">
 <meta property="article:tag" content="PVE">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://hqw700.github.io/img/blog//rufus-pve-iso.png">
+<meta name="twitter:image" content="https://hqw700.github.io/img/blog/pve-sriov-1.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>PVE setup in n100 - 不秃的Android世界</title>
+  <title>PVE setup igpu sriov mode in N100 - 不秃的Android世界</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -206,7 +203,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="PVE setup in n100"></span>
+            <span id="subtitle" data-typed-text="PVE setup igpu sriov mode in N100"></span>
           
         </div>
 
@@ -217,8 +214,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-04-10 22:53" pubdate>
-          2024年4月10日 晚上
+        <time datetime="2024-04-11 22:53" pubdate>
+          2024年4月11日 晚上
         </time>
       </span>
     
@@ -262,17 +259,29 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">PVE setup in n100</h1>
+            <h1 style="display: none">PVE setup igpu sriov mode in N100</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="ISO镜像下载"><a href="#ISO镜像下载" class="headerlink" title="ISO镜像下载"></a>ISO镜像下载</h2><p>1.2GB<br><a target="_blank" rel="noopener" href="https://enterprise.proxmox.com/iso/proxmox-ve_8.1-2.iso">https://enterprise.proxmox.com/iso/proxmox-ve_8.1-2.iso</a><br>或者使用国内源<br><a target="_blank" rel="noopener" href="https://mirrors.bfsu.edu.cn/proxmox/iso/proxmox-ve_8.1-2.iso">https://mirrors.bfsu.edu.cn/proxmox/iso/proxmox-ve_8.1-2.iso</a></p>
-<h2 id="制作启动盘"><a href="#制作启动盘" class="headerlink" title="制作启动盘"></a>制作启动盘</h2><p><img src="/img/blog//rufus-pve-iso.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>把u盘插进主机中启动安装<br><img src="/img/blog//pve-install-1.png" srcset="/img/loading.gif" lazyload><br><img src="/img/blog//pve-install-2.png" srcset="/img/loading.gif" lazyload><br><img src="/img/blog//pve-install-3.png" srcset="/img/loading.gif" lazyload></p>
-<h3 id="拔掉U盘然后等待自动重启"><a href="#拔掉U盘然后等待自动重启" class="headerlink" title="拔掉U盘然后等待自动重启"></a>拔掉U盘然后等待自动重启</h3><p><img src="/img/blog//pve-install-4.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="在另外一台PC通过网址进入"><a href="#在另外一台PC通过网址进入" class="headerlink" title="在另外一台PC通过网址进入"></a>在另外一台PC通过网址进入</h2><p><img src="/img/blog//pve-install-5.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="更新国内源地址"><a href="#更新国内源地址" class="headerlink" title="更新国内源地址"></a>更新国内源地址</h2><p>参照北外源文档：<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/proxmox/">https://mirrors.tuna.tsinghua.edu.cn/help/proxmox/</a></p>
+                <p>previous post: <a href="https://hqw700.github.io/2024/04/10/2024-04-10-pve-setup-in-n100/">PVE setup in n100</a></p>
+<h2 id="grub-配置"><a href="#grub-配置" class="headerlink" title="grub 配置"></a>grub 配置</h2><p>edit /etc/default/grub</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">GRUB_CMDLINE_LINUX_DEFAULT</span>=<span class="hljs-string">&quot;quiet intel_iommu=on i915.enable_guc=3 i915.max_vfs=7&quot;</span><br></code></pre></td></tr></table></figure>
+<p>After edit</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">update</span>-grub<br><span class="hljs-keyword">update</span>-initramfs -u<br>reboot<br></code></pre></td></tr></table></figure>
+<h2 id="modules-配置"><a href="#modules-配置" class="headerlink" title="modules 配置"></a>modules 配置</h2><p>edit /etc/modules</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">vfio<br>vfio<span class="hljs-emphasis">_iommu_type1</span><br><span class="hljs-emphasis">vfio_pci</span><br><span class="hljs-emphasis">vfio_</span>virqfd<br></code></pre></td></tr></table></figure>
+<h2 id="安装linux-headers"><a href="#安装linux-headers" class="headerlink" title="安装linux headers"></a>安装linux headers</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">wget</span> http://mirrors.ustc.edu.cn/proxmox/debian/dists/bookworm/pve-no-subscription/binary-amd64/proxmox-headers-<span class="hljs-number">6</span>.<span class="hljs-number">5</span>.<span class="hljs-number">11</span>-<span class="hljs-number">8</span>-pve_6.<span class="hljs-number">5</span>.<span class="hljs-number">11</span>-<span class="hljs-number">8</span>_amd64.deb<br><span class="hljs-attribute">dpkg</span> -i proxmox-headers-<span class="hljs-number">6</span>.<span class="hljs-number">5</span>.<span class="hljs-number">11</span>-<span class="hljs-number">8</span>-pve_6.<span class="hljs-number">5</span>.<span class="hljs-number">11</span>-<span class="hljs-number">8</span>_amd64.deb<br></code></pre></td></tr></table></figure>
+<h2 id="安装依赖包"><a href="#安装依赖包" class="headerlink" title="安装依赖包"></a>安装依赖包</h2><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">apt <span class="hljs-keyword">install </span>-y  <span class="hljs-keyword">build-* </span>git unzip dkms<br></code></pre></td></tr></table></figure>
+<h2 id="下载并编译sriov驱动"><a href="#下载并编译sriov驱动" class="headerlink" title="下载并编译sriov驱动"></a>下载并编译sriov驱动</h2><h3 id="代码下载"><a href="#代码下载" class="headerlink" title="代码下载"></a>代码下载</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">cd <span class="hljs-regexp">/usr/</span>src<br>git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/strongtz/i</span>915-sriov-dkms i915-sriov-dkms-<span class="hljs-number">6.5</span><br></code></pre></td></tr></table></figure>
+<h2 id="代码修改"><a href="#代码修改" class="headerlink" title="代码修改"></a>代码修改</h2><p>edit /usr/src/i915-sriov-dkms-6.1/dkms.conf with the following:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">PACKAGE_NAME</span>=<span class="hljs-string">&quot;i915-sriov-dkms&quot;</span><br><span class="hljs-attr">PACKAGE_VERSION</span>=<span class="hljs-string">&quot;6.5&quot;</span><br></code></pre></td></tr></table></figure>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">dkms</span> install --force -m i915-sriov-dkms -v <span class="hljs-number">6</span>.<span class="hljs-number">5</span><br><span class="hljs-attribute">reboot</span><br></code></pre></td></tr></table></figure>
+<p><img src="/img/blog/pve-sriov-1.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="重启后查看dmesg"><a href="#重启后查看dmesg" class="headerlink" title="重启后查看dmesg"></a>重启后查看dmesg</h2><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c">dmesg <span class="hljs-string">| grep -ie guc -ie hc -ie sriov</span><br></code></pre></td></tr></table></figure>
+<p>显示 <strong>Running in SR-IOV PF mode</strong>，说明驱动加载成功<br><img src="/img/blog/pve-sriov-2.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="设置核显切分"><a href="#设置核显切分" class="headerlink" title="设置核显切分"></a>设置核显切分</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">echo</span> <span class="hljs-number">7</span> &gt; /sys/devices/pci0000:<span class="hljs-number">00</span>/<span class="hljs-number">0000</span>:<span class="hljs-number">00</span>:<span class="hljs-number">02</span>.<span class="hljs-number">0</span>/sriov_numvfs<br></code></pre></td></tr></table></figure>
+<p><code>lspci | grep -i vga</code> 显示有8个显卡，说明切分成功<br><img src="/img/blog/pve-sriov-3.png" srcset="/img/loading.gif" lazyload></p>
 
                 
               </div>
@@ -322,15 +331,15 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>PVE setup in n100</div>
-      <div>https://hqw700.github.io/2024/04/10/2024-04-10-pve-setup-in-n100/</div>
+      <div>PVE setup igpu sriov mode in N100</div>
+      <div>https://hqw700.github.io/2024/04/11/2024-04-11-pve-setup-igpu-sriov-mode-in-n100/</div>
     </div>
     <div class="license-meta">
       
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年4月10日</div>
+          <div>2024年4月11日</div>
         </div>
       
       
@@ -362,18 +371,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/04/11/2024-04-11-pve-setup-igpu-sriov-mode-in-n100/" title="PVE setup igpu sriov mode in N100">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">PVE setup igpu sriov mode in N100</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/04/08/2024-04-08-custom-android-emulator-kernel/" title="Custom Android Emulator kernel">
-                        <span class="hidden-mobile">Custom Android Emulator kernel</span>
+                      <a href="/2024/04/10/2024-04-10-pve-setup-in-n100/" title="PVE setup in n100">
+                        <span class="hidden-mobile">PVE setup in n100</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
