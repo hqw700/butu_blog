@@ -16,29 +16,24 @@
   <meta name="author" content="">
   <meta name="keywords" content="">
   
-    <meta name="description" content="在Intel n100的PVE下设置SRIOV核显切分">
+    <meta name="description" content="使用repo diff导出差异后，在其它repo项目打patch">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PVE setup igpu sriov mode in N100">
-<meta property="og:url" content="https://hqw700.github.io/2024/04/11/2024-04-11-pve-setup-igpu-sriov-mode-in-n100/index.html">
+<meta property="og:title" content="给repo项目打patch">
+<meta property="og:url" content="https://hqw700.github.io/2024/04/29/2024-04-29-repo-patch-after-repo-diff/index.html">
 <meta property="og:site_name" content="不秃的Android世界">
-<meta property="og:description" content="在Intel n100的PVE下设置SRIOV核显切分">
+<meta property="og:description" content="使用repo diff导出差异后，在其它repo项目打patch">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://hqw700.github.io/img/blog/pve-sriov-1.png">
-<meta property="og:image" content="https://hqw700.github.io/img/blog/pve-sriov-2.png">
-<meta property="og:image" content="https://hqw700.github.io/img/blog/pve-sriov-3.png">
-<meta property="article:published_time" content="2024-04-11T14:53:00.000Z">
-<meta property="article:modified_time" content="2024-04-11T14:52:33.966Z">
+<meta property="article:published_time" content="2024-04-29T06:34:00.000Z">
+<meta property="article:modified_time" content="2024-04-29T06:35:43.010Z">
+<meta property="article:tag" content="git">
 <meta property="article:tag" content="教程">
-<meta property="article:tag" content="虚拟化">
-<meta property="article:tag" content="PVE">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://hqw700.github.io/img/blog/pve-sriov-1.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>PVE setup igpu sriov mode in N100 - 不秃的Android世界</title>
+  <title>给repo项目打patch - 不秃的Android世界</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -203,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="PVE setup igpu sriov mode in N100"></span>
+            <span id="subtitle" data-typed-text="给repo项目打patch"></span>
           
         </div>
 
@@ -214,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-04-11 22:53" pubdate>
-          2024年4月11日 晚上
+        <time datetime="2024-04-29 14:34" pubdate>
+          2024年4月29日 下午
         </time>
       </span>
     
@@ -259,30 +254,19 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">PVE setup igpu sriov mode in N100</h1>
+            <h1 style="display: none">给repo项目打patch</h1>
             
             
               <div class="markdown-body">
                 
-                <p>previous post: <a href="https://hqw700.github.io/2024/04/10/2024-04-10-pve-setup-in-n100/">PVE setup in n100</a></p>
-<h2 id="grub-配置"><a href="#grub-配置" class="headerlink" title="grub 配置"></a>grub 配置</h2><p>edit /etc/default/grub</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">GRUB_CMDLINE_LINUX_DEFAULT</span>=<span class="hljs-string">&quot;quiet intel_iommu=on i915.enable_guc=3 i915.max_vfs=7&quot;</span><br></code></pre></td></tr></table></figure>
-<p>After edit</p>
-<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">update</span>-grub<br><span class="hljs-keyword">update</span>-initramfs -u<br>reboot<br></code></pre></td></tr></table></figure>
-<h2 id="modules-配置"><a href="#modules-配置" class="headerlink" title="modules 配置"></a>modules 配置</h2><p>edit /etc/modules</p>
-<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">vfio<br>vfio<span class="hljs-emphasis">_iommu_type1</span><br><span class="hljs-emphasis">vfio_pci</span><br><span class="hljs-emphasis">vfio_</span>virqfd<br></code></pre></td></tr></table></figure>
-<h2 id="安装linux-headers"><a href="#安装linux-headers" class="headerlink" title="安装linux headers"></a>安装linux headers</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">wget</span> http://mirrors.ustc.edu.cn/proxmox/debian/dists/bookworm/pve-no-subscription/binary-amd64/proxmox-headers-<span class="hljs-number">6</span>.<span class="hljs-number">5</span>.<span class="hljs-number">11</span>-<span class="hljs-number">8</span>-pve_6.<span class="hljs-number">5</span>.<span class="hljs-number">11</span>-<span class="hljs-number">8</span>_amd64.deb<br><span class="hljs-attribute">dpkg</span> -i proxmox-headers-<span class="hljs-number">6</span>.<span class="hljs-number">5</span>.<span class="hljs-number">11</span>-<span class="hljs-number">8</span>-pve_6.<span class="hljs-number">5</span>.<span class="hljs-number">11</span>-<span class="hljs-number">8</span>_amd64.deb<br></code></pre></td></tr></table></figure>
-<h2 id="安装依赖包"><a href="#安装依赖包" class="headerlink" title="安装依赖包"></a>安装依赖包</h2><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">apt <span class="hljs-keyword">install </span>-y  <span class="hljs-keyword">build-* </span>git unzip dkms<br></code></pre></td></tr></table></figure>
-<h2 id="下载并编译sriov驱动"><a href="#下载并编译sriov驱动" class="headerlink" title="下载并编译sriov驱动"></a>下载并编译sriov驱动</h2><h3 id="代码下载"><a href="#代码下载" class="headerlink" title="代码下载"></a>代码下载</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">cd <span class="hljs-regexp">/usr/</span>src<br>git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/strongtz/i</span>915-sriov-dkms i915-sriov-dkms-<span class="hljs-number">6.5</span><br></code></pre></td></tr></table></figure>
-<h2 id="代码修改"><a href="#代码修改" class="headerlink" title="代码修改"></a>代码修改</h2><p>edit /usr/src/i915-sriov-dkms-6.1/dkms.conf with the following:</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">PACKAGE_NAME</span>=<span class="hljs-string">&quot;i915-sriov-dkms&quot;</span><br><span class="hljs-attr">PACKAGE_VERSION</span>=<span class="hljs-string">&quot;6.5&quot;</span><br></code></pre></td></tr></table></figure>
-<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">dkms</span> install --force -m i915-sriov-dkms -v <span class="hljs-number">6</span>.<span class="hljs-number">5</span><br><span class="hljs-attribute">reboot</span><br></code></pre></td></tr></table></figure>
-<p><img src="/img/blog/pve-sriov-1.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="重启后查看dmesg"><a href="#重启后查看dmesg" class="headerlink" title="重启后查看dmesg"></a>重启后查看dmesg</h2><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c">dmesg <span class="hljs-string">| grep -ie guc -ie hc -ie sriov</span><br></code></pre></td></tr></table></figure>
-<p>显示 <strong>Running in SR-IOV PF mode</strong>，说明驱动加载成功<br><img src="/img/blog/pve-sriov-2.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="设置核显切分"><a href="#设置核显切分" class="headerlink" title="设置核显切分"></a>设置核显切分</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">echo</span> <span class="hljs-number">7</span> &gt; /sys/devices/pci0000:<span class="hljs-number">00</span>/<span class="hljs-number">0000</span>:<span class="hljs-number">00</span>:<span class="hljs-number">02</span>.<span class="hljs-number">0</span>/sriov_numvfs<br></code></pre></td></tr></table></figure>
-<p><code>lspci | grep -i vga</code> 显示有8个显卡，说明切分成功<br><img src="/img/blog/pve-sriov-3.png" srcset="/img/loading.gif" lazyload></p>
-
+                <h2 id="查看当前修改，可能涉及几个不同的仓库"><a href="#查看当前修改，可能涉及几个不同的仓库" class="headerlink" title="查看当前修改，可能涉及几个不同的仓库"></a>查看当前修改，可能涉及几个不同的仓库</h2><p>eg.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">repo status</span><br>project art/                                    (*** NO BRANCH ***)<br> -m     runtime/mem_map.cc<br>project build/make/                             (*** NO BRANCH ***)<br> -m     target/board/generic_x86/BoardConfig.mk<br> -m     target/board/generic_x86/device.mk<br> -m     target/product/runtime_libart.mk<br>project prebuilts/misc/                         (*** NO BRANCH ***)<br> -m     linux-x86/flex/flex-2.5.39<br>project packages/apps/DeskClock/                (*** NO BRANCH ***)<br> -m     src/com/android/deskclock/stopwatch/StopwatchFragment.java<br>project system/core/                            (*** NO BRANCH ***)<br> -m     rootdir/etc/ld.config.txt<br> -m     rootdir/init.rc<br></code></pre></td></tr></table></figure>
+<h2 id="使用repo-diff导出修改"><a href="#使用repo-diff导出修改" class="headerlink" title="使用repo diff导出修改"></a>使用repo diff导出修改</h2><figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">repo <span class="hljs-built_in">diff</span> &gt; repo.<span class="hljs-built_in">diff</span><br></code></pre></td></tr></table></figure>
+<h2 id="在其它repo仓库中导入修改"><a href="#在其它repo仓库中导入修改" class="headerlink" title="在其它repo仓库中导入修改"></a>在其它repo仓库中导入修改</h2><p>使用以下脚本<br>repo-diff-patch.sh</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/sh</span><br><span class="hljs-comment">## Script to patch up diff reated by `repo diff`</span><br><br><span class="hljs-keyword">if</span> [ -z <span class="hljs-string">&quot;<span class="hljs-variable">$1</span>&quot;</span> ] || [ ! -e <span class="hljs-string">&quot;<span class="hljs-variable">$1</span>&quot;</span> ]; <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Usages: <span class="hljs-variable">$0</span> &lt;repo_diff_file&gt;&quot;</span>;<br>    <span class="hljs-built_in">exit</span> 0;<br><span class="hljs-keyword">fi</span><br><br><span class="hljs-built_in">rm</span> -fr _tmp_splits*<br><span class="hljs-built_in">cat</span> <span class="hljs-variable">$1</span> | <span class="hljs-built_in">csplit</span> -qf <span class="hljs-string">&#x27;&#x27;</span> -b <span class="hljs-string">&quot;_tmp_splits.%d.diff&quot;</span> - <span class="hljs-string">&#x27;/^project.*\/$/&#x27;</span> <span class="hljs-string">&#x27;&#123;*&#125;&#x27;</span> <br><br>working_dir=`<span class="hljs-built_in">pwd</span>`<br><br><span class="hljs-keyword">for</span> proj_diff <span class="hljs-keyword">in</span> `<span class="hljs-built_in">ls</span> _tmp_splits.*.diff`<br><span class="hljs-keyword">do</span> <br>    chg_dir=`<span class="hljs-built_in">cat</span> <span class="hljs-variable">$proj_diff</span> | grep <span class="hljs-string">&#x27;^project.*\/$&#x27;</span> | <span class="hljs-built_in">cut</span> -d <span class="hljs-string">&quot; &quot;</span> -f 2`<br>    <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;FILE: <span class="hljs-variable">$proj_diff</span> <span class="hljs-variable">$chg_dir</span>&quot;</span><br>    <span class="hljs-keyword">if</span> [ -e <span class="hljs-variable">$chg_dir</span> ]; <span class="hljs-keyword">then</span><br>        ( <span class="hljs-built_in">cd</span> <span class="hljs-variable">$chg_dir</span>; \<br>            <span class="hljs-built_in">cat</span> <span class="hljs-variable">$working_dir</span>/<span class="hljs-variable">$proj_diff</span> | grep -v <span class="hljs-string">&#x27;^project.*\/$&#x27;</span> | patch -Np1;);<br>    <span class="hljs-keyword">else</span><br>        <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$0</span>: Project directory <span class="hljs-variable">$chg_dir</span> don&#x27;t exists.&quot;</span>;<br>    <span class="hljs-keyword">fi</span><br><span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure>
+<h3 id="打patch"><a href="#打patch" class="headerlink" title="打patch"></a>打patch</h3><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs gradle">$ ./repo-diff-patch.sh repo.diff<br><span class="hljs-keyword">FILE</span>: _tmp_splits.<span class="hljs-number">0</span>.diff<br>patch: **** Only garbage was found in the patch input.<br><span class="hljs-keyword">FILE</span>: _tmp_splits.<span class="hljs-number">1</span>.diff art/<br>patching <span class="hljs-keyword">file</span> <span class="hljs-keyword">runtime</span>/mem_map.cc<br><span class="hljs-keyword">FILE</span>: _tmp_splits.<span class="hljs-number">2</span>.diff build<span class="hljs-regexp">/make/</span><br>patching <span class="hljs-keyword">file</span> target<span class="hljs-regexp">/board/g</span>eneric_x86/BoardConfig.mk<br>patching <span class="hljs-keyword">file</span> target<span class="hljs-regexp">/board/g</span>eneric_x86/device.mk<br>patching <span class="hljs-keyword">file</span> target<span class="hljs-regexp">/product/</span>runtime_libart.mk<br><span class="hljs-keyword">FILE</span>: _tmp_splits.<span class="hljs-number">3</span>.diff packages<span class="hljs-regexp">/apps/</span>DeskClock/<br>patching <span class="hljs-keyword">file</span> src<span class="hljs-regexp">/com/</span>android<span class="hljs-regexp">/deskclock/</span>stopwatch/StopwatchFragment.java<br><span class="hljs-keyword">FILE</span>: _tmp_splits.<span class="hljs-number">4</span>.diff prebuilts<span class="hljs-regexp">/misc/</span><br>patching <span class="hljs-keyword">file</span> linux-x86<span class="hljs-regexp">/flex/</span>flex-<span class="hljs-number">2.5</span>.<span class="hljs-number">39</span><br><span class="hljs-keyword">FILE</span>: _tmp_splits.<span class="hljs-number">5</span>.diff system<span class="hljs-regexp">/core/</span><br>patching <span class="hljs-keyword">file</span> rootdir<span class="hljs-regexp">/etc/</span>ld.config.txt<br>patching <span class="hljs-keyword">file</span> rootdir/init.rc<br></code></pre></td></tr></table></figure>
+<h3 id="After-patch"><a href="#After-patch" class="headerlink" title="After patch"></a>After patch</h3><p>其中prebuilts/misc/linux-x86/flex/flex-2.5.39为是二进制文件，patch失败</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">repo status</span><br>project art/                                    (*** NO BRANCH ***)<br> -m     runtime/mem_map.cc<br>project build/make/                             (*** NO BRANCH ***)<br> -m     target/board/generic_x86/BoardConfig.mk<br> -m     target/board/generic_x86/device.mk<br> -m     target/product/runtime_libart.mk<br>project packages/apps/DeskClock/                (*** NO BRANCH ***)<br> -m     src/com/android/deskclock/stopwatch/StopwatchFragment.java<br>project system/core/                            (*** NO BRANCH ***)<br> -m     rootdir/etc/ld.config.txt<br> -m     rootdir/init.rc<br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -300,7 +284,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/" class="category-chain-item">虚拟化</a>
+  <a href="/categories/%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86/" class="category-chain-item">代码管理</a>
   
   
 
@@ -315,11 +299,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
+        <a href="/tags/git/">#git</a>
+      
         <a href="/tags/%E6%95%99%E7%A8%8B/">#教程</a>
-      
-        <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
-      
-        <a href="/tags/PVE/">#PVE</a>
       
     </div>
   
@@ -331,15 +313,15 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>PVE setup igpu sriov mode in N100</div>
-      <div>https://hqw700.github.io/2024/04/11/2024-04-11-pve-setup-igpu-sriov-mode-in-n100/</div>
+      <div>给repo项目打patch</div>
+      <div>https://hqw700.github.io/2024/04/29/2024-04-29-repo-patch-after-repo-diff/</div>
     </div>
     <div class="license-meta">
       
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年4月11日</div>
+          <div>2024年4月29日</div>
         </div>
       
       
@@ -371,18 +353,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/04/29/2024-04-29-repo-patch-after-repo-diff/" title="给repo项目打patch">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">给repo项目打patch</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/04/10/2024-04-10-pve-setup-in-n100/" title="PVE setup in n100">
-                        <span class="hidden-mobile">PVE setup in n100</span>
+                      <a href="/2024/04/11/2024-04-11-pve-setup-igpu-sriov-mode-in-n100/" title="PVE setup igpu sriov mode in N100">
+                        <span class="hidden-mobile">PVE setup igpu sriov mode in N100</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
